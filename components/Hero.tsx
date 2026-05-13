@@ -16,7 +16,7 @@ export function Hero() {
             Discover, collect, and trade extraordinary NFTs from world-class creators. Earn $NOVA tokens with every interaction.
           </p>
           <div className="flex flex-wrap gap-4">
-            <a href="#collection" className="group inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold text-primary-foreground transition hover:scale-105"
+            <a href="/nfts" className="group inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold text-primary-foreground transition hover:scale-105"
               style={{ background: "var(--gradient-primary)", boxShadow: "var(--shadow-glow)" }}>
               Explore drops
               <ArrowRight className="w-4 h-4 transition group-hover:translate-x-1" />

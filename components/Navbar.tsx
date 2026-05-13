@@ -18,7 +18,7 @@ export function Navbar() {
           <span className="text-gradient">NOVA</span>
         </Link>
         <div className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
-          <a href="/#explore" className="hover:text-foreground transition">Explore</a>
+          <Link href="/nfts" className="hover:text-foreground transition">Explore</Link>
           <a href="/#collection" className="hover:text-foreground transition">Collection</a>
           <a href="/#claim" className="hover:text-foreground transition">Token</a>
           <a href="/#roadmap" className="hover:text-foreground transition">Roadmap</a>
