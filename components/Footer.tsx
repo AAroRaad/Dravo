@@ -9,7 +9,7 @@ export function Footer() {
             <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: "var(--gradient-primary)" }}>
               <Sparkles className="w-5 h-5 text-background" />
             </div>
-            <span className="text-gradient">NOVA</span>
+            <span className="text-gradient">DRAVO</span>
           </div>
           <p className="text-sm text-muted-foreground max-w-xs">The home of digital collectibles. Made by creators, for creators.</p>
         </div>
@@ -22,7 +22,7 @@ export function Footer() {
         </div>
       </div>
       <div className="max-w-7xl mx-auto mt-10 pt-6 border-t border-white/5 text-xs text-muted-foreground flex justify-between flex-wrap gap-2">
-        <span>© 2026 NOVA Labs</span>
+        <span>© 2026 Dravo Labs</span>
         <span>Built with ✦ on-chain</span>
       </div>
     </footer>

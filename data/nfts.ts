@@ -25,7 +25,7 @@ const extra: Nft[] = [
   { id: "6", img: nft1, name: "Quantum Bloom", artist: "@flora", price: "1.2", likes: 188, category: "Art" },
   { id: "7", img: nft4, name: "Cyber Samurai", artist: "@edo", price: "4.5", likes: 720, category: "Gaming" },
   { id: "8", img: nft2, name: "Mosaic Tiger #77", artist: "@mosaic", price: "2.0", likes: 265, category: "Collectibles" },
-  { id: "9", img: nft1, name: "Nova Mirage", artist: "@nebula", price: "0.78", likes: 143, category: "Art" },
+  { id: "9", img: nft1, name: "Dravo Mirage", artist: "@nebula", price: "0.78", likes: 143, category: "Art" },
   { id: "10", img: nft3, name: "Dragon Embers", artist: "@runic", price: "6.2", likes: 1024, category: "Gaming" },
   { id: "11", img: nft4, name: "Midnight Ronin", artist: "@bushido", price: "1.55", likes: 209, category: "Collectibles" },
   { id: "12", img: nft2, name: "Pixel Ape #042", artist: "@mosaic", price: "2.9", likes: 358, category: "Collectibles" },

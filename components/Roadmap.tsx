@@ -1,7 +1,7 @@
 const phases = [
-  { q: "Q1", t: "Genesis Launch", d: "Mint 10K founding NFTs and seed liquidity for $NOVA." },
+  { q: "Q1", t: "Genesis Launch", d: "Mint 10K founding NFTs and seed liquidity for $DRAVO." },
   { q: "Q2", t: "Marketplace v2", d: "Cross-chain trading, lazy minting, and creator royalties." },
-  { q: "Q3", t: "Staking Vaults", d: "Stake NFTs to earn $NOVA and unlock tiered drops." },
+  { q: "Q3", t: "Staking Vaults", d: "Stake NFTs to earn $DRAVO and unlock tiered drops." },
   { q: "Q4", t: "Creator DAO", d: "Community governance and an artist grants treasury." },
 ];
 

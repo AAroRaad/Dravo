@@ -31,10 +31,10 @@ export function ClaimToken() {
                 <Coins className="w-4 h-4" /> Token claim
               </div>
               <h2 className="text-4xl md:text-5xl font-bold leading-tight mb-4">
-                Claim your <span className="text-gradient">$NOVA</span> tokens
+                Claim your <span className="text-gradient">$DRAVO</span> tokens
               </h2>
               <p className="text-muted-foreground mb-6">
-                Get 500 $NOVA free for joining the genesis community. Use them to bid, stake, and unlock exclusive drops.
+                Get 500 $DRAVO free for joining the genesis community. Use them to bid, stake, and unlock exclusive drops.
               </p>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 {["Instant on-chain delivery", "Zero gas fees", "Stake to earn rewards"].map(t => (
@@ -60,14 +60,14 @@ export function ClaimToken() {
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">Reward</span>
-                <span className="font-bold text-gradient text-lg">500 $NOVA</span>
+                <span className="font-bold text-gradient text-lg">500 $DRAVO</span>
               </div>
               <button type="submit" disabled={status === "loading" || status === "done"}
                 className="w-full cursor-pointer py-4 rounded-xl font-bold text-primary-foreground transition hover:scale-[1.02] disabled:opacity-80 disabled:hover:scale-100 flex items-center justify-center gap-2 animate-pulse-glow"
                 style={{ background: "var(--gradient-primary)" }}>
                 {status === "idle" && "Claim tokens"}
                 {status === "loading" && (<><Loader2 className="w-4 h-4 animate-spin" /> Minting...</>)}
-                {status === "done" && (<><Check className="w-4 h-4" /> {claimed} $NOVA claimed</>)}
+                {status === "done" && (<><Check className="w-4 h-4" /> {claimed} $DRAVO claimed</>)}
               </button>
               <p className="text-[10px] text-muted-foreground text-center">By claiming you agree to the protocol terms. Demo only.</p>
             </form>

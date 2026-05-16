@@ -1,22 +1,27 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
-import { WalletProvider } from "@/hooks/use-wallet";
+
+import { Providers } from "@/components/Providers";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "NOVA — Collect the Future of Digital Art",
-  description: "Discover, collect and trade NFTs. Claim free $NOVA tokens and join the genesis drop.",
-  openGraph: {
-    title: "NOVA — NFT Marketplace",
-    description: "Premium NFTs and free $NOVA token claims.",
-    type: "website",
-  },
+  title: "Dravo NFTs | Future of Digital Assets",
+  description: "Experience the next generation of NFT marketplace",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html lang="en">
-      <body>
-        <WalletProvider>{children}</WalletProvider>
+    <html lang="en" className="dark">
+      <body className={`${inter.className} min-h-screen bg-background text-foreground`}>
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );
