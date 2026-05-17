@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { auth } from "@/auth";
 import { logout } from "@/lib/actions/auth-actions";
-import { User, LogOut } from "lucide-react";
+import { User, LogOut, Zap } from "lucide-react";
 
 export async function Navbar() {
   const session = await auth();
@@ -11,32 +11,32 @@ export async function Navbar() {
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         <Link
           href="/"
-          className="text-2xl font-bold text-gradient tracking-tighter"
+          className="flex items-center gap-2 text-2xl font-bold text-gradient tracking-tighter"
         >
+          <div
+            className="w-8 h-8 rounded-lg flex items-center justify-center"
+            style={{ background: "var(--gradient-primary)" }}
+          >
+            <Zap className="w-4 h-4 text-white" />
+          </div>
           DRAVO
         </Link>
 
         <div className="hidden md:flex items-center gap-8">
           <Link
-            href="/nfts"
+            href="#how-it-works"
             className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors"
           >
-            Marketplace
+            Challenges
           </Link>
           <Link
-            href="/#collection"
-            className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors"
-          >
-            Collections
-          </Link>
-          <Link
-            href="/#claim"
+            href="#claim"
             className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors"
           >
             Claim
           </Link>
           <Link
-            href="/#roadmap"
+            href="#roadmap"
             className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors"
           >
             Roadmap

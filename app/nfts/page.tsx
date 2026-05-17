@@ -1,19 +1,7 @@
-import type { Metadata } from "next";
-import { NftsView } from "@/components/NftsView";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "All NFTs — Browse the Dravo Collection",
-  description: "Browse all NFTs in the Dravo marketplace. Filter by category and discover trending digital art.",
-};
-
+// The marketplace has been replaced with the 6-hour challenge engine.
+// Redirect any old /nfts links back to home.
 export default function NftsPage() {
-  return (
-    <>
-      <Navbar />
-      <NftsView />
-      <Footer />
-    </>
-  );
+  redirect("/");
 }

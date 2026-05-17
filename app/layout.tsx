@@ -7,8 +7,8 @@ import { Providers } from "@/components/Providers";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Dravo NFTs | Future of Digital Assets",
-  description: "Experience the next generation of NFT marketplace",
+  title: "Dravo | 6-Hour Consistency Engine",
+  description: "Complete your 6-hour action, earn a unique token, and build unbreakable habits with Dravo.",
 };
 
 export default function RootLayout({
