@@ -32,6 +32,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         if (!isPasswordCorrect) return null;
 
+        // Stamp lastLoginAt so the 6-hour action cooldown begins from this moment
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { lastLoginAt: new Date() },
+        });
+
         return {
           id: user.id,
           email: user.email,
