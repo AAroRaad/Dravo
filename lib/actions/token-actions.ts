@@ -99,14 +99,15 @@ export async function executeSixHourAction(bypassCooldown: boolean = false) {
   // Simulate the server-side background action
   const actionType = ACTION_TYPES[Math.floor(Math.random() * ACTION_TYPES.length)];
 
-  // Generate and persist the new token
-  const tokenString = generateToken();
-  const newToken = await prisma.generatedToken.create({
-    data: {
-      userId,
-      token: tokenString,
-      actionType,
-    },
+  // Generate and persist 10 new tokens
+  const newTokensData = Array.from({ length: 10 }).map(() => ({
+    userId,
+    token: generateToken(),
+    actionType,
+  }));
+  
+  await prisma.generatedToken.createMany({
+    data: newTokensData,
   });
 
   // Fetch full updated list for the client
@@ -115,14 +116,17 @@ export async function executeSixHourAction(bypassCooldown: boolean = false) {
     orderBy: { createdAt: "desc" },
   });
 
+  // Get the 10 newly created tokens to return them specifically
+  const createdTokens = allTokens.slice(0, 10).map(t => ({
+    id: t.id,
+    token: t.token,
+    actionType: t.actionType,
+    createdAt: t.createdAt.toISOString(),
+  }));
+
   return {
     success: true,
-    newToken: {
-      id: newToken.id,
-      token: newToken.token,
-      actionType: newToken.actionType,
-      createdAt: newToken.createdAt.toISOString(),
-    },
+    newTokens: createdTokens,
     tokens: allTokens.map((t) => ({
       id: t.id,
       token: t.token,

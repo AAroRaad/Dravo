@@ -43,13 +43,13 @@ export function Hero() {
           </div>
 
           <h1 className="text-5xl md:text-7xl font-bold leading-[1.05] tracking-tight">
-            Do something{" "}
+            Extract the Core{" "}
             <span className="text-gradient">every&nbsp;6&nbsp;hours</span>
           </h1>
 
           <p className="text-lg text-muted-foreground max-w-lg">
-            Log in, complete your 6-hour action, and earn a unique reward token.
-            Stay consistent, build streaks, unlock achievements — no selling, no crypto.
+            Wait for the engine to charge, complete the extraction mini-game, and earn 10 unique proof-of-action tokens per cycle.
+            Stay consistent, build streaks, and unlock achievements.
           </p>
 
           <div className="flex flex-wrap gap-4">
@@ -129,10 +129,10 @@ export function Hero() {
             {/* Action slots */}
             <div className="p-6 space-y-3">
               {[
-                { label: "Morning action", time: "06:00", done: true },
-                { label: "Noon action", time: "12:00", done: true },
-                { label: "Evening action", time: "18:00", done: false, active: true },
-                { label: "Night action", time: "00:00", done: false },
+                { label: "Cycle 1 Extraction", time: "06:00", done: true },
+                { label: "Cycle 2 Extraction", time: "12:00", done: true },
+                { label: "Cycle 3 Extraction", time: "18:00", done: false, active: true },
+                { label: "Cycle 4 Extraction", time: "00:00", done: false },
               ].map((slot) => (
                 <div
                   key={slot.label}
