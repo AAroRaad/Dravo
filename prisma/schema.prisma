@@ -16,7 +16,8 @@ model User {
   lastLoginAt     DateTime?
   accounts        Account[]
   sessions        Session[]
-  generatedTokens GeneratedToken[]
+  tokenBalance    Int                @default(0)
+  transactions    TokenTransaction[]
  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -49,10 +50,10 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model GeneratedToken {
+model TokenTransaction {
   id         String   @id @default(cuid())
   userId     String
-  token      String   @unique
+  amount     Int
   actionType String
   createdAt  DateTime @default(now())
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)

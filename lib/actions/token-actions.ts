@@ -15,12 +15,7 @@ const ACTION_TYPES = [
   "Token Supply Audit",
 ];
 
-function generateToken(): string {
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  const segment = () =>
-    Array.from({ length: 4 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
-  return `DRAVO-${segment()}-${segment()}-${segment()}`;
-}
+
 
 export async function getClaimStatus() {
   const session = await auth();
@@ -32,17 +27,17 @@ export async function getClaimStatus() {
 
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { id: true, name: true, email: true, lastLoginAt: true },
+    select: { id: true, name: true, email: true, lastLoginAt: true, tokenBalance: true },
   });
 
   if (!user) return { status: "unauthenticated" as const };
 
-  const tokens = await prisma.generatedToken.findMany({
+  const transactions = await prisma.tokenTransaction.findMany({
     where: { userId },
     orderBy: { createdAt: "desc" },
   });
 
-  const lastClaimedAt = tokens.length > 0 ? tokens[0].createdAt : null;
+  const lastClaimedAt = transactions.length > 0 ? transactions[0].createdAt : null;
   // Cooldown starts from last claim, or from login if never claimed
   const cooldownStart = lastClaimedAt ?? user.lastLoginAt;
   const nextAvailableAt = cooldownStart
@@ -59,9 +54,10 @@ export async function getClaimStatus() {
     nextAvailableAt: nextAvailableAt?.toISOString() ?? null,
     cooldownMs: COOLDOWN_MS,
     isReady,
-    tokens: tokens.map((t) => ({
+    tokenBalance: user.tokenBalance,
+    transactions: transactions.map((t) => ({
       id: t.id,
-      token: t.token,
+      amount: t.amount,
       actionType: t.actionType,
       createdAt: t.createdAt.toISOString(),
     })),
@@ -78,16 +74,16 @@ export async function executeSixHourAction(bypassCooldown: boolean = false) {
 
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { lastLoginAt: true },
+    select: { lastLoginAt: true, tokenBalance: true },
   });
 
-  const lastToken = await prisma.generatedToken.findFirst({
+  const lastTx = await prisma.tokenTransaction.findFirst({
     where: { userId },
     orderBy: { createdAt: "desc" },
   });
 
   if (!bypassCooldown) {
-    const cooldownStart = lastToken?.createdAt ?? user?.lastLoginAt;
+    const cooldownStart = lastTx?.createdAt ?? user?.lastLoginAt;
     if (cooldownStart) {
       const nextAvailableAt = new Date(cooldownStart.getTime() + COOLDOWN_MS);
       if (new Date() < nextAvailableAt) {
@@ -99,37 +95,38 @@ export async function executeSixHourAction(bypassCooldown: boolean = false) {
   // Simulate the server-side background action
   const actionType = ACTION_TYPES[Math.floor(Math.random() * ACTION_TYPES.length)];
 
-  // Generate and persist 10 new tokens
-  const newTokensData = Array.from({ length: 10 }).map(() => ({
-    userId,
-    token: generateToken(),
-    actionType,
-  }));
-  
-  await prisma.generatedToken.createMany({
-    data: newTokensData,
+  const amount = 5;
+
+  const newTx = await prisma.tokenTransaction.create({
+    data: {
+      userId,
+      amount,
+      actionType,
+    },
   });
 
-  // Fetch full updated list for the client
-  const allTokens = await prisma.generatedToken.findMany({
+  await prisma.user.update({
+    where: { id: userId },
+    data: { tokenBalance: { increment: amount } },
+  });
+
+  const allTxs = await prisma.tokenTransaction.findMany({
     where: { userId },
     orderBy: { createdAt: "desc" },
   });
 
-  // Get the 10 newly created tokens to return them specifically
-  const createdTokens = allTokens.slice(0, 10).map(t => ({
-    id: t.id,
-    token: t.token,
-    actionType: t.actionType,
-    createdAt: t.createdAt.toISOString(),
-  }));
-
   return {
     success: true,
-    newTokens: createdTokens,
-    tokens: allTokens.map((t) => ({
+    newTransaction: {
+      id: newTx.id,
+      amount: newTx.amount,
+      actionType: newTx.actionType,
+      createdAt: newTx.createdAt.toISOString(),
+    },
+    tokenBalance: (user?.tokenBalance ?? 0) + amount,
+    transactions: allTxs.map((t) => ({
       id: t.id,
-      token: t.token,
+      amount: t.amount,
       actionType: t.actionType,
       createdAt: t.createdAt.toISOString(),
     })),

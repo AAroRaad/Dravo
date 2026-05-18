@@ -26,9 +26,9 @@ import {
 // ─── Types ──────────────────────────────────────────────────────────────────
 
 type ClaimStatus = Awaited<ReturnType<typeof getClaimStatus>>;
-type TokenEntry = {
+type TokenTransaction = {
   id: string;
-  token: string;
+  amount: number;
   actionType: string;
   createdAt: string;
 };
@@ -137,7 +137,7 @@ function LoggedOutCard() {
         {[
           "6-hour action windows, 4× per day",
           "Complete mini-game to claim",
-          "Unique token generated per action",
+          "Tokens added directly to your balance",
           "Full history dashboard",
         ].map((b) => (
           <li key={b} className="flex items-center gap-2 text-muted-foreground">
@@ -166,24 +166,13 @@ function LoggedOutCard() {
   );
 }
 
-function TokenRevealCard({
-  tokens,
+function SuccessCard({
+  transaction,
   onDismiss,
 }: {
-  tokens: TokenEntry[];
+  transaction: TokenTransaction;
   onDismiss: () => void;
 }) {
-  const [copied, setCopied] = useState(false);
-
-  const copy = async () => {
-    const text = tokens.map((t) => t.token).join("\n");
-    await navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const firstToken = tokens[0];
-
   return (
     <div
       className="relative overflow-hidden rounded-2xl border border-purple-500/30 p-6 text-center animate-in fade-in zoom-in duration-500"
@@ -216,59 +205,42 @@ function TokenRevealCard({
       <div className="relative">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-500/20 border border-green-500/30 text-green-400 text-xs mb-4">
           <Check className="w-3 h-3" />
-          Extraction Complete — {tokens.length} Tokens Earned!
+          Extraction Complete!
         </div>
 
         <p className="text-xs text-muted-foreground mb-1 uppercase tracking-widest">
-          {firstToken.actionType}
+          {transaction.actionType}
         </p>
 
         <div
-          className="my-4 px-4 py-4 rounded-xl border border-purple-500/30 bg-black/30"
+          className="my-4 px-4 py-6 rounded-xl border border-purple-500/30 bg-black/30"
           style={{ animation: "glow-pulse 2s ease-in-out infinite" }}
         >
-          <div className="flex flex-col gap-1 max-h-32 overflow-y-auto custom-scrollbar">
-            {tokens.map((t) => (
-              <span
-                key={t.id}
-                className="font-mono text-sm md:text-base font-bold text-gradient tracking-widest"
-              >
-                {t.token}
-              </span>
-            ))}
+          <div className="flex flex-col items-center justify-center gap-2">
+            <span className="text-5xl font-bold text-gradient">
+              +{transaction.amount}
+            </span>
+            <span className="text-sm font-semibold text-purple-300 uppercase tracking-widest">
+              Tokens Earned
+            </span>
           </div>
         </div>
 
         <p className="text-xs text-muted-foreground mb-4">
-          These are your unique proof-of-action tokens. Save them or just admire
-          them — you earned them.
+          Your dashboard has been updated with your new balance.
         </p>
 
         <div className="flex gap-2 justify-center">
           <button
-            onClick={copy}
-            className="cursor-pointer flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium bg-white/5 hover:bg-white/10 border border-white/10 transition-all"
-          >
-            {copied ? (
-              <>
-                <Check className="w-4 h-4 text-green-400" /> Copied All!
-              </>
-            ) : (
-              <>
-                <Copy className="w-4 h-4" /> Copy All
-              </>
-            )}
-          </button>
-          <button
             onClick={onDismiss}
-            className="cursor-pointer px-4 py-2 rounded-xl text-sm font-medium bg-white/5 hover:bg-white/10 border border-white/10 transition-all"
+            className="cursor-pointer px-8 py-2.5 rounded-xl text-sm font-medium bg-white/5 hover:bg-white/10 border border-white/10 transition-all"
           >
-            Dismiss
+            Awesome!
           </button>
         </div>
 
         <p className="mt-4 text-[10px] text-muted-foreground">
-          Earned {formatDate(firstToken.createdAt)}
+          Earned {formatDate(transaction.createdAt)}
         </p>
       </div>
     </div>
@@ -301,8 +273,8 @@ function ActionLog({ steps }: { steps: string[] }) {
   );
 }
 
-function TokenHistoryTable({ tokens }: { tokens: TokenEntry[] }) {
-  if (tokens.length === 0) return null;
+function TokenHistoryTable({ transactions }: { transactions: TokenTransaction[] }) {
+  if (transactions.length === 0) return null;
 
   return (
     <div className="mt-8">
@@ -317,7 +289,7 @@ function TokenHistoryTable({ tokens }: { tokens: TokenEntry[] }) {
           <thead>
             <tr className="border-b border-white/5 bg-white/[0.02]">
               <th className="text-left px-4 py-3 text-xs uppercase tracking-widest text-muted-foreground font-medium">
-                Token
+                Amount
               </th>
               <th className="text-left px-4 py-3 text-xs uppercase tracking-widest text-muted-foreground font-medium hidden sm:table-cell">
                 Action
@@ -328,13 +300,13 @@ function TokenHistoryTable({ tokens }: { tokens: TokenEntry[] }) {
             </tr>
           </thead>
           <tbody>
-            {tokens.map((t) => (
+            {transactions.map((t) => (
               <tr
                 key={t.id}
                 className="border-b border-white/5 last:border-0 hover:bg-white/[0.02] transition-colors"
               >
-                <td className="px-4 py-3 font-mono text-xs text-gradient font-semibold">
-                  {t.token}
+                <td className="px-4 py-3 font-mono text-sm text-green-400 font-semibold">
+                  +{t.amount} Tokens
                 </td>
                 <td className="px-4 py-3 text-xs text-muted-foreground hidden sm:table-cell">
                   <span className="px-2 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300">
@@ -366,8 +338,8 @@ const ACTION_LOG_STEPS = [
 
 export function ClaimToken() {
   const [claimStatus, setClaimStatus] = useState<ClaimStatus | null>(null);
-  const [tokens, setTokens] = useState<TokenEntry[]>([]);
-  const [newTokens, setNewTokens] = useState<TokenEntry[] | null>(null);
+  const [transactions, setTransactions] = useState<TokenTransaction[]>([]);
+  const [newTransaction, setNewTransaction] = useState<TokenTransaction | null>(null);
   const [countdown, setCountdown] = useState<number>(0);
   const [bypassCooldown, setBypassCooldown] = useState(false);
   const [executing, setExecuting] = useState(false);
@@ -384,7 +356,7 @@ export function ClaimToken() {
     const result = await getClaimStatus();
     setClaimStatus(result);
     if (result.status === "authenticated") {
-      setTokens(result.tokens);
+      setTransactions(result.transactions);
     }
   }, []);
 
@@ -427,8 +399,8 @@ export function ClaimToken() {
           alert(result.error);
           return;
         }
-        setNewTokens(result.newTokens);
-        setTokens(result.tokens);
+        setNewTransaction(result.newTransaction);
+        setTransactions(result.transactions);
         await fetchStatus();
       });
     }, totalDelay);
@@ -469,7 +441,7 @@ export function ClaimToken() {
           </h2>
           <p className="mt-4 text-muted-foreground max-w-xl mx-auto text-sm">
             Every 6 hours a new window opens. Complete the mini-game to earn
-            your unique token as proof. No selling, no crypto — just
+            tokens added directly to your balance. No selling, no crypto — just
             consistency.
           </p>
         </div>
@@ -498,7 +470,7 @@ export function ClaimToken() {
             {/* ── AUTHENTICATED ── */}
             {isAuthenticated &&
               !executing &&
-              !newTokens &&
+              !newTransaction &&
               (() => {
                 const s = claimStatus as Extract<
                   ClaimStatus,
@@ -612,11 +584,25 @@ export function ClaimToken() {
                         </p>
                       </div>
 
+                      <div className="flex items-center gap-4 bg-white/5 rounded-2xl p-4 border border-white/10">
+                        <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center border border-purple-500/30">
+                          <Zap className="w-6 h-6 text-purple-400" />
+                        </div>
+                        <div>
+                          <p className="text-xs uppercase tracking-widest text-muted-foreground mb-1">
+                            Your Balance
+                          </p>
+                          <p className="text-2xl font-bold text-white">
+                            {s.tokenBalance} <span className="text-sm font-normal text-purple-300">Tokens</span>
+                          </p>
+                        </div>
+                      </div>
+
                       <div className="space-y-3 text-sm">
                         {[
                           {
                             icon: Shield,
-                            label: "Unique token per action completed",
+                            label: "Tokens added to balance directly",
                             color: "text-secondary",
                           },
                           {
@@ -778,20 +764,20 @@ export function ClaimToken() {
             )}
 
             {/* ── SUCCESS TOKEN REVEAL ── */}
-            {newTokens && (
+            {newTransaction && (
               <div className="space-y-6 animate-in fade-in duration-300">
-                <TokenRevealCard
-                  tokens={newTokens}
-                  onDismiss={() => setNewTokens(null)}
+                <SuccessCard
+                  transaction={newTransaction}
+                  onDismiss={() => setNewTransaction(null)}
                 />
               </div>
             )}
 
             {/* ── TOKEN HISTORY ── */}
             {isAuthenticated &&
-              tokens.length > 0 &&
+              transactions.length > 0 &&
               !executing &&
-              !playingGame && <TokenHistoryTable tokens={tokens} />}
+              !playingGame && <TokenHistoryTable transactions={transactions} />}
           </div>
         </div>
       </div>
