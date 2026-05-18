@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { auth } from "@/auth";
-import { logout } from "@/lib/actions/auth-actions";
-import { User, LogOut, Zap } from "lucide-react";
+import { LogoutButton } from "./LogoutButton";
+import { User, Zap } from "lucide-react";
 
 export async function Navbar() {
   const session = await auth();
@@ -54,11 +54,7 @@ export async function Navbar() {
                   {session.user?.name || session.user?.email}
                 </span>
               </div>
-              <form action={logout}>
-                <button className="cursor-pointer p-2 rounded-xl bg-white/5 hover:bg-red-500/10 hover:text-red-500 transition-all border border-white/10 group">
-                  <LogOut className="w-4 h-4" />
-                </button>
-              </form>
+              <LogoutButton />
             </div>
           ) : (
             <div className="flex items-center gap-2">
