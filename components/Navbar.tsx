@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { auth } from "@/auth";
-import { LogoutButton } from "./LogoutButton";
-import { User, Zap } from "lucide-react";
+import { UserDropdown } from "./UserDropdown";
+import { Zap } from "lucide-react";
 
 export async function Navbar() {
   const session = await auth();
@@ -45,17 +45,7 @@ export async function Navbar() {
 
         <div className="flex items-center gap-3">
           {session ? (
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-full border border-white/10">
-                <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
-                  <User className="w-3.5 h-3.5 text-primary" />
-                </div>
-                <span className="text-xs font-medium text-foreground/80 hidden sm:block">
-                  {session.user?.name || session.user?.email}
-                </span>
-              </div>
-              <LogoutButton />
-            </div>
+            <UserDropdown user={session.user} />
           ) : (
             <div className="flex items-center gap-2">
               <Link
