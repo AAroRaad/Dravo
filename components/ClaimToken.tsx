@@ -22,6 +22,9 @@ import {
   getClaimStatus,
   executeSixHourAction,
 } from "@/lib/actions/token-actions";
+import { ClaimPanel } from "./web3/ClaimPanel";
+import { CountdownTimer } from "./web3/CountdownTimer";
+import { AlertModal } from "./ui/AlertModal";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -345,6 +348,7 @@ export function ClaimToken() {
   const [executing, setExecuting] = useState(false);
   const [logSteps, setLogSteps] = useState<string[]>([]);
   const [isPending, startTransition] = useTransition();
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   // Mini-game state
   const [playingGame, setPlayingGame] = useState(false);
@@ -396,7 +400,7 @@ export function ClaimToken() {
         setExecuting(false);
         setLogSteps([]);
         if ("error" in result) {
-          alert(result.error);
+          setErrorMsg(result.error as string);
           return;
         }
         setNewTransaction(result.newTransaction);
@@ -479,94 +483,14 @@ export function ClaimToken() {
 
                 // If playing game, render the active clicker mode
                 if (playingGame) {
-                  const gameProgressPercent =
-                    (gameClicks / TARGET_CLICKS) * 100;
                   return (
-                    <div className="flex flex-col items-center gap-8 py-10 animate-in fade-in zoom-in duration-500">
-                      <div className="text-center">
-                        <h3 className="text-2xl font-bold mb-2 text-purple-400">
-                          Extracting Core Energy
-                        </h3>
-                        <p className="text-sm text-muted-foreground max-w-sm">
-                          Tap the core rapidly to stabilize the matrix and
-                          extract your reward token.
-                        </p>
-                      </div>
-
-                      <div className="relative w-48 h-48 mx-auto">
-                        <button
-                          onClick={() => {
-                            const next = gameClicks + 1;
-                            setGameClicks(next);
-                            if (next >= TARGET_CLICKS) {
-                              setPlayingGame(false);
-                              handleExecute();
-                            }
-                          }}
-                          className="w-full h-full rounded-full flex items-center justify-center transition-all duration-75 active:scale-95 cursor-pointer bg-purple-500/10 hover:bg-purple-500/20 select-none"
-                          style={{
-                            boxShadow: `0 0 ${20 + gameProgressPercent}px rgba(168,85,247,0.5), inset 0 0 20px rgba(255,255,255,0.1)`,
-                          }}
-                        >
-                          <Zap
-                            className="w-16 h-16 text-purple-400 drop-shadow-md transition-transform"
-                            style={{
-                              transform: `scale(${1 + gameProgressPercent / 150})`,
-                            }}
-                          />
-                        </button>
-
-                        <svg
-                          className="absolute inset-0 w-full h-full pointer-events-none -m-4"
-                          style={{
-                            width: "calc(100% + 32px)",
-                            height: "calc(100% + 32px)",
-                          }}
-                          viewBox="0 0 100 100"
-                        >
-                          <circle
-                            cx="50"
-                            cy="50"
-                            r="48"
-                            fill="none"
-                            stroke="rgba(255,255,255,0.05)"
-                            strokeWidth="4"
-                          />
-                          <circle
-                            cx="50"
-                            cy="50"
-                            r="48"
-                            fill="none"
-                            stroke="url(#readyGrad)"
-                            strokeWidth="4"
-                            strokeDasharray="301.59"
-                            strokeDashoffset={
-                              301.59 - 301.59 * (gameClicks / TARGET_CLICKS)
-                            }
-                            strokeLinecap="round"
-                            transform="rotate(-90 50 50)"
-                            style={{
-                              transition: "stroke-dashoffset 0.1s ease",
-                            }}
-                          />
-                        </svg>
-                      </div>
-
-                      <div className="w-full max-w-xs text-center">
-                        <div className="text-xs uppercase tracking-widest text-muted-foreground mb-2 flex justify-between">
-                          <span>Extraction Progress</span>
-                          <span className="font-bold text-white">
-                            {gameClicks} / {TARGET_CLICKS} TAPS
-                          </span>
-                        </div>
-                        <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-gradient-to-r from-purple-500 to-cyan-400 transition-all duration-100"
-                            style={{ width: `${gameProgressPercent}%` }}
-                          />
-                        </div>
-                      </div>
-                    </div>
+                    <ClaimPanel 
+                      targetClicks={50} 
+                      onComplete={() => {
+                        setPlayingGame(false);
+                        handleExecute();
+                      }} 
+                    />
                   );
                 }
 
@@ -684,14 +608,9 @@ export function ClaimToken() {
                               </span>
                             </>
                           ) : (
-                            <>
-                              <span className="font-mono text-lg font-bold tabular-nums">
-                                {formatCountdown(countdown)}
-                              </span>
-                              <span className="text-[10px] text-muted-foreground uppercase tracking-wider mt-0.5">
-                                until next window
-                              </span>
-                            </>
+                            <CountdownTimer 
+                              targetDate={claimStatus.nextAvailableAt ?? null} 
+                            />
                           )}
                         </div>
                       </div>
@@ -735,8 +654,7 @@ export function ClaimToken() {
 
                       {!isReady && (
                         <div className="w-full text-center text-xs text-muted-foreground px-4">
-                          <Clock className="w-4 h-4 mx-auto mb-1 opacity-50" />
-                          Next window opens in {formatCountdown(countdown)}
+                          <CountdownTimer targetDate={claimStatus.nextAvailableAt ?? null} />
                         </div>
                       )}
 
@@ -778,6 +696,14 @@ export function ClaimToken() {
               transactions.length > 0 &&
               !executing &&
               !playingGame && <TokenHistoryTable transactions={transactions} />}
+
+            <AlertModal
+              isOpen={!!errorMsg}
+              onClose={() => setErrorMsg(null)}
+              title="Action Failed"
+              message={errorMsg || ""}
+              type="error"
+            />
           </div>
         </div>
       </div>

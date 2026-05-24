@@ -2,6 +2,7 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import { UserDropdown } from "./UserDropdown";
 import { Zap } from "lucide-react";
+import { ConnectWalletButton } from "./web3/ConnectWalletButton";
 
 export async function Navbar() {
   const session = await auth();
@@ -44,6 +45,7 @@ export async function Navbar() {
         </div>
 
         <div className="flex items-center gap-3">
+          <ConnectWalletButton />
           {session ? (
             <UserDropdown user={session.user} />
           ) : (

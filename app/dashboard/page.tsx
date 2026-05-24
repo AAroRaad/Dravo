@@ -2,7 +2,9 @@ import { redirect } from "next/navigation";
 import { getClaimStatus } from "@/lib/actions/token-actions";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { Zap, History, Shield, Star, Terminal } from "lucide-react";
+import { Zap, History, Shield, Terminal } from "lucide-react";
+import { TokenBalanceCard } from "@/components/web3/TokenBalanceCard";
+import { DashboardCharts } from "@/components/web3/DashboardCharts";
 
 export default function DashboardPage() {
   return (
@@ -54,16 +56,7 @@ async function DashboardContent() {
         </div>
 
         {/* Balance Card */}
-        <div className="p-6 rounded-2xl glass border border-primary/20 relative overflow-hidden group" style={{ boxShadow: "0 0 40px rgba(168,85,247,0.1)" }}>
-          <div className="absolute top-0 right-0 p-4 opacity-50">
-            <Star className="w-16 h-16 text-primary blur-md" />
-          </div>
-          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-2">Total Tokens</h3>
-          <div className="flex items-baseline gap-2">
-            <span className="text-5xl font-bold text-gradient">{tokenBalance}</span>
-            <span className="text-sm text-primary">Tokens</span>
-          </div>
-        </div>
+        <TokenBalanceCard initialBalance={tokenBalance} />
 
         {/* Stats Card */}
         <div className="p-6 rounded-2xl glass border border-white/5">
@@ -86,6 +79,15 @@ async function DashboardContent() {
         <div className="p-6 rounded-2xl glass border border-white/5 h-full">
           <div className="flex items-center gap-3 mb-6">
             <Terminal className="w-5 h-5 text-muted-foreground" />
+            <h2 className="text-xl font-semibold">Activity Overview</h2>
+          </div>
+          
+          <div className="mb-8">
+            <DashboardCharts transactions={transactions} />
+          </div>
+          
+          <div className="flex items-center gap-3 mb-6 pt-6 border-t border-white/5">
+            <History className="w-5 h-5 text-muted-foreground" />
             <h2 className="text-xl font-semibold">Transaction History</h2>
           </div>
 
