@@ -108,10 +108,10 @@ export function Hero() {
                 >
                   <Zap className="w-4 h-4 text-white" />
                 </div>
-                <span className="font-bold text-sm">DRAVO Engine</span>
+                <span className="font-bold text-sm flex items-center gap-2">DRAVO Engine <span className="px-1.5 py-0.5 rounded-sm bg-white/5 border border-white/10 text-[9px] text-muted-foreground uppercase tracking-widest font-medium">Demo</span></span>
               </div>
               <div className="flex items-center gap-1.5 text-xs text-green-400">
-                <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse motion-reduce:animate-none" />
                 LIVE
               </div>
             </div>
@@ -178,7 +178,7 @@ export function Hero() {
                 style={{ background: "var(--gradient-primary)" }}
               >
                 <Flame className="w-4 h-4" />
-                Current streak: 7 days 🔥
+                Start your daily streak 🔥
               </div>
             </div>
           </div>

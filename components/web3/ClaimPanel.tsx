@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Zap } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 
 interface ClaimPanelProps {
   onComplete: () => void;
@@ -11,6 +11,7 @@ interface ClaimPanelProps {
 
 export function ClaimPanel({ onComplete, targetClicks = 50 }: ClaimPanelProps) {
   const [clicks, setClicks] = useState(0);
+  const prefersReducedMotion = useReducedMotion();
 
   const handleClick = () => {
     const next = clicks + 1;
@@ -25,11 +26,17 @@ export function ClaimPanel({ onComplete, targetClicks = 50 }: ClaimPanelProps) {
   return (
     <div className="flex flex-col items-center gap-8 py-10">
       <div className="text-center" role="region" aria-live="polite">
-        <h3 className="text-2xl font-bold mb-2 text-purple-400">
-          Extracting Core Energy
-        </h3>
+        {progressPercent === 100 ? (
+          <h3 className="text-2xl font-bold mb-2 text-green-400">
+            Extraction Complete! Submitting...
+          </h3>
+        ) : (
+          <h3 className="text-2xl font-bold mb-2 text-purple-400">
+            Extracting Core Energy
+          </h3>
+        )}
         <p className="text-sm text-muted-foreground max-w-sm">
-          Tap the core {targetClicks} times to stabilize the matrix and extract your reward token.
+          {progressPercent === 100 ? "Matrix stabilized." : `Tap the core ${targetClicks} times to stabilize the matrix and extract your reward token.`}
         </p>
       </div>
 
@@ -46,10 +53,10 @@ export function ClaimPanel({ onComplete, targetClicks = 50 }: ClaimPanelProps) {
           <AnimatePresence mode="popLayout">
             <motion.div
               key={clicks}
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1 + progressPercent / 150, opacity: 1 }}
-              exit={{ scale: 1.2, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              initial={{ scale: prefersReducedMotion ? 1 : 0.8, opacity: prefersReducedMotion ? 1 : 0 }}
+              animate={{ scale: prefersReducedMotion ? 1 : 1 + progressPercent / 150, opacity: 1 }}
+              exit={{ scale: prefersReducedMotion ? 1 : 1.2, opacity: prefersReducedMotion ? 1 : 0 }}
+              transition={prefersReducedMotion ? { duration: 0 } : { type: "spring", stiffness: 300, damping: 20 }}
             >
               <Zap className="w-16 h-16 text-purple-400 drop-shadow-md" />
             </motion.div>

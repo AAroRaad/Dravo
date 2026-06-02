@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { X, CheckCircle, AlertTriangle, Info } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -15,12 +15,20 @@ interface AlertModalProps {
 }
 
 export function AlertModal({ isOpen, onClose, title, message, type = "info" }: AlertModalProps) {
-  // Lock body scroll when modal is open
+  const closeBtnRef = React.useRef<HTMLButtonElement>(null);
+  const previouslyFocusedRef = React.useRef<HTMLElement | null>(null);
+
+  // Lock body scroll when modal is open and trap focus
   useEffect(() => {
     if (isOpen) {
+      previouslyFocusedRef.current = document.activeElement as HTMLElement;
       document.body.style.overflow = "hidden";
+      setTimeout(() => {
+        closeBtnRef.current?.focus();
+      }, 50);
     } else {
       document.body.style.overflow = "unset";
+      previouslyFocusedRef.current?.focus();
     }
     return () => {
       document.body.style.overflow = "unset";
@@ -95,6 +103,7 @@ export function AlertModal({ isOpen, onClose, title, message, type = "info" }: A
             )}
             
             <button
+              ref={closeBtnRef}
               onClick={onClose}
               className="absolute top-4 right-4 text-muted-foreground hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-full p-1"
               aria-label="Close modal"

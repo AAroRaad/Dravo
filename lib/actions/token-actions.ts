@@ -95,7 +95,7 @@ export async function executeSixHourAction(bypassCooldown: boolean = false) {
   // Simulate the server-side background action
   const actionType = ACTION_TYPES[Math.floor(Math.random() * ACTION_TYPES.length)];
 
-  const amount = 5;
+  const amount = 10;
 
   const newTx = await prisma.tokenTransaction.create({
     data: {
@@ -105,9 +105,10 @@ export async function executeSixHourAction(bypassCooldown: boolean = false) {
     },
   });
 
-  await prisma.user.update({
+  const updatedUser = await prisma.user.update({
     where: { id: userId },
     data: { tokenBalance: { increment: amount } },
+    select: { tokenBalance: true },
   });
 
   const allTxs = await prisma.tokenTransaction.findMany({
@@ -123,7 +124,7 @@ export async function executeSixHourAction(bypassCooldown: boolean = false) {
       actionType: newTx.actionType,
       createdAt: newTx.createdAt.toISOString(),
     },
-    tokenBalance: (user?.tokenBalance ?? 0) + amount,
+    tokenBalance: updatedUser.tokenBalance,
     transactions: allTxs.map((t) => ({
       id: t.id,
       amount: t.amount,

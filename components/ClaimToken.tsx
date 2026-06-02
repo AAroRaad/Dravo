@@ -70,10 +70,8 @@ function ProgressRing({
 
   return (
     <svg
-      width="140"
-      height="140"
       viewBox="0 0 140 140"
-      className="drop-shadow-lg"
+      className="w-full max-w-[140px] aspect-square drop-shadow-lg"
     >
       {/* Track */}
       <circle
@@ -287,8 +285,8 @@ function TokenHistoryTable({ transactions }: { transactions: TokenTransaction[] 
           Action History
         </span>
       </div>
-      <div className="rounded-2xl border border-white/5 overflow-hidden">
-        <table className="w-full text-sm">
+      <div className="rounded-2xl border border-white/5 overflow-x-auto">
+        <table className="w-full text-sm min-w-[400px]">
           <thead>
             <tr className="border-b border-white/5 bg-white/[0.02]">
               <th className="text-left px-4 py-3 text-xs uppercase tracking-widest text-muted-foreground font-medium">
@@ -352,8 +350,6 @@ export function ClaimToken() {
 
   // Mini-game state
   const [playingGame, setPlayingGame] = useState(false);
-  const [gameClicks, setGameClicks] = useState(0);
-  const TARGET_CLICKS = 50; // Required taps to get the token
 
   // Initial fetch
   const fetchStatus = useCallback(async () => {
@@ -637,7 +633,6 @@ export function ClaimToken() {
                       {isReady && (
                         <button
                           onClick={() => {
-                            setGameClicks(0);
                             setPlayingGame(true);
                           }}
                           disabled={isPending}
@@ -652,11 +647,7 @@ export function ClaimToken() {
                         </button>
                       )}
 
-                      {!isReady && (
-                        <div className="w-full text-center text-xs text-muted-foreground px-4">
-                          <CountdownTimer targetDate={claimStatus.nextAvailableAt ?? null} />
-                        </div>
-                      )}
+
 
                       {s.lastClaimedAt && (
                         <p className="text-[11px] text-muted-foreground">

@@ -6,7 +6,10 @@ import { Zap, History, Shield, Terminal } from "lucide-react";
 import { TokenBalanceCard } from "@/components/web3/TokenBalanceCard";
 import { DashboardCharts } from "@/components/web3/DashboardCharts";
 
-export default function DashboardPage() {
+import { DashboardSkeleton } from "@/components/ui/DashboardSkeleton";
+import { Suspense } from "react";
+
+export default async function DashboardPage() {
   return (
     <main className="min-h-screen flex flex-col bg-background text-foreground">
       <Navbar />
@@ -19,7 +22,9 @@ export default function DashboardPage() {
           <h1 className="text-4xl font-bold">Dashboard</h1>
         </div>
 
-        <DashboardContent />
+        <Suspense fallback={<DashboardSkeleton />}>
+          <DashboardContent />
+        </Suspense>
       </div>
 
       <Footer />
