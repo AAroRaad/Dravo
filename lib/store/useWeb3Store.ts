@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { BrowserProvider } from 'ethers';
+import { toast } from 'react-toastify';
 
 interface Web3State {
   walletAddress: string | null;
@@ -33,11 +34,15 @@ export const useWeb3Store = create<Web3State>()(
               set({ walletAddress: accounts[0] });
             }
           } else {
-            set({ walletError: "No wallet detected. Install MetaMask to continue." });
+            toast.error("No wallet detected. Install MetaMask to continue.", { autoClose: 2000 });
           }
         } catch (error: any) {
-          console.error("Failed to connect wallet:", error);
-          set({ walletError: error?.message || "Failed to connect wallet." });
+          if (error?.code === 4001 || error?.code === 'ACTION_REJECTED' || error?.message?.includes('User rejected')) {
+            toast.error("Connection request was rejected by the user.", { autoClose: 2000 });
+          } else {
+            console.error("Failed to connect wallet:", error);
+            toast.error(error?.message || "Failed to connect wallet.", { autoClose: 2000 });
+          }
         } finally {
           set({ isConnecting: false });
         }

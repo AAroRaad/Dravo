@@ -14,7 +14,13 @@ interface AlertModalProps {
   type?: AlertType;
 }
 
-export function AlertModal({ isOpen, onClose, title, message, type = "info" }: AlertModalProps) {
+export function AlertModal({
+  isOpen,
+  onClose,
+  title,
+  message,
+  type = "info",
+}: AlertModalProps) {
   const closeBtnRef = React.useRef<HTMLButtonElement>(null);
   const previouslyFocusedRef = React.useRef<HTMLElement | null>(null);
 
@@ -49,26 +55,20 @@ export function AlertModal({ isOpen, onClose, title, message, type = "info" }: A
   const icons = {
     success: <CheckCircle className="w-8 h-8 text-green-400" />,
     error: <AlertTriangle className="w-8 h-8 text-red-400" />,
-    info: <Info className="w-8 h-8 text-blue-400" />
-  };
-
-  const gradients = {
-    success: "linear-gradient(135deg, rgba(74,222,128,0.15) 0%, rgba(6,182,212,0.1) 100%)",
-    error: "linear-gradient(135deg, rgba(248,113,113,0.15) 0%, rgba(239,68,68,0.1) 100%)",
-    info: "linear-gradient(135deg, rgba(96,165,250,0.15) 0%, rgba(59,130,246,0.1) 100%)"
+    info: <Info className="w-8 h-8 text-blue-400" />,
   };
 
   const borderColors = {
-    success: "border-green-500/30",
-    error: "border-red-500/30",
-    info: "border-blue-500/30"
+    success: "border-green-500/50",
+    error: "border-red-500/50",
+    info: "border-blue-500/50",
   };
 
   return (
     <AnimatePresence>
       {isOpen && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0"
+        <div
+          className="fixed inset-0 z-50 flex items-start justify-center p-4 pt-10 sm:p-0 sm:pt-10"
           role="dialog"
           aria-modal="true"
           aria-labelledby="modal-title"
@@ -80,7 +80,7 @@ export function AlertModal({ isOpen, onClose, title, message, type = "info" }: A
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/80"
           />
 
           {/* Modal Content */}
@@ -88,20 +88,20 @@ export function AlertModal({ isOpen, onClose, title, message, type = "info" }: A
             initial={{ scale: 0.95, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 20 }}
-            className={`relative w-full max-w-sm overflow-hidden rounded-2xl border ${borderColors[type]} p-6 shadow-2xl`}
-            style={{ background: gradients[type] }}
+            className={`relative w-full max-w-sm overflow-hidden rounded-2xl border ${borderColors[type]} p-6 shadow-2xl bg-zinc-950`}
           >
             {/* Shimmer effect for success */}
-            {type === 'success' && (
-              <div 
+            {type === "success" && (
+              <div
                 className="absolute inset-0 opacity-20 pointer-events-none rounded-2xl"
-                style={{ 
-                  background: "linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%)",
-                  animation: "shimmer 3s infinite"
+                style={{
+                  background:
+                    "linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%)",
+                  animation: "shimmer 3s infinite",
                 }}
               />
             )}
-            
+
             <button
               ref={closeBtnRef}
               onClick={onClose}
@@ -112,9 +112,7 @@ export function AlertModal({ isOpen, onClose, title, message, type = "info" }: A
             </button>
 
             <div className="flex flex-col items-center text-center">
-              <div className="mb-4">
-                {icons[type]}
-              </div>
+              <div className="mb-4">{icons[type]}</div>
               <h2 id="modal-title" className="text-xl font-bold mb-2">
                 {title}
               </h2>

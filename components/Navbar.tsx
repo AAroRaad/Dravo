@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { UserDropdown } from "./UserDropdown";
 import { Zap, Menu, X } from "lucide-react";
 import { ConnectWalletButton } from "./web3/ConnectWalletButton";
+import { ThemeToggle } from "./ui/ThemeToggle";
 import { useState, useEffect } from "react";
 
 export function Navbar() {
@@ -61,6 +62,7 @@ export function Navbar() {
         </div>
 
         <div className="hidden md:flex items-center gap-3">
+          <ThemeToggle />
           <ConnectWalletButton />
           {session ? (
             <UserDropdown user={session.user} />
@@ -82,15 +84,18 @@ export function Navbar() {
           )}
         </div>
 
-        <button
-          className="md:hidden p-2 -mr-2 text-foreground/80 hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
-          aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-          aria-expanded={isMobileMenuOpen}
-          aria-controls="mobile-nav"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        >
-          {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+        <div className="flex md:hidden items-center gap-2">
+          <ThemeToggle />
+          <button
+            className="p-2 -mr-2 text-foreground/80 hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
+            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isMobileMenuOpen}
+            aria-controls="mobile-nav"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
       </div>
 
       {isMobileMenuOpen && (

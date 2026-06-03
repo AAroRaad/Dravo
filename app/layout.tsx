@@ -12,13 +12,16 @@ export const metadata: Metadata = {
   description: "Complete your 6-hour action, earn a unique token, and build unbreakable habits with Dravo.",
 };
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} min-h-screen bg-background text-foreground`}>
         <SkipLink />
         <Providers>
@@ -26,6 +29,7 @@ export default function RootLayout({
             {children}
           </div>
         </Providers>
+        <ToastContainer theme="dark" position="top-center" autoClose={2000} />
       </body>
     </html>
   );

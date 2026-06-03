@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import { useWeb3Store } from "@/lib/store/useWeb3Store";
 import { Loader2, Wallet } from "lucide-react";
-import { AlertModal } from "@/components/ui/AlertModal";
 
 export function ConnectWalletButton() {
   const { walletAddress, isConnecting, walletError, connectWallet, disconnectWallet, clearWalletError } = useWeb3Store();
@@ -57,14 +56,6 @@ export function ConnectWalletButton() {
           )}
         </button>
       )}
-
-      <AlertModal
-        isOpen={!!walletError}
-        onClose={clearWalletError}
-        title="Wallet Connection Failed"
-        message={walletError || ""}
-        type="error"
-      />
     </>
   );
 }
