@@ -1,27 +1,33 @@
 const phases = [
   {
     q: "Phase 1",
-    t: "6-Hour Engine",
-    d: "Log in every 6 hours, complete a challenge, and earn a unique reward token.",
-    icon: "⚡",
+    t: "Foundation",
+    d: "Current state: Web2 auth, off-chain gamified rewards, and initial Web3 wallet connection.",
+    icon: "✅",
   },
   {
     q: "Phase 2",
-    t: "Streak System",
-    d: "Build daily streaks. Miss a window and your streak resets — stay consistent.",
-    icon: "🔥",
+    t: "Smart Contract",
+    d: "Develop the ERC-20 Token using Hardhat/Foundry, including secure EIP-712 claiming logic.",
+    icon: "🛠️",
   },
   {
     q: "Phase 3",
-    t: "Achievements",
-    d: "Unlock badges and titles for milestone streaks: 7 days, 30 days, 100 days.",
-    icon: "🏆",
+    t: "Testnet Launch",
+    d: "Deploy to Sepolia testnet and build the 'Claim to Wallet' UI for off-chain to on-chain conversion.",
+    icon: "🔗",
   },
   {
     q: "Phase 4",
-    t: "Community Leaderboard",
-    d: "Compete with others on a global leaderboard. See who's most consistent.",
-    icon: "🌍",
+    t: "Security & Audit",
+    d: "Perform rigorous security audits, verify tokenomics, and optimize gas fees.",
+    icon: "🛡️",
+  },
+  {
+    q: "Phase 5",
+    t: "Mainnet Release",
+    d: "Deploy to an L2 Mainnet (like Base or Arbitrum), provide initial liquidity, and go live!",
+    icon: "🚀",
   },
 ];
 
@@ -31,21 +37,21 @@ export function Roadmap() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-14">
           <div className="text-sm text-secondary uppercase tracking-widest mb-3">
-            What&apos;s coming
+            The Journey to Web3
           </div>
           <h2 className="text-4xl md:text-5xl font-bold">
-            Building the{" "}
-            <span className="text-gradient">6-hour habit</span>
+            Publishing the{" "}
+            <span className="text-gradient">Nova Token</span>
           </h2>
           <p className="mt-4 text-muted-foreground max-w-xl mx-auto text-sm">
-            Dravo is more than a countdown — it&apos;s a consistency engine. Here&apos;s where we&apos;re headed.
+            From an off-chain gamified system to a fully decentralized on-chain token. Here is our roadmap to Mainnet.
           </p>
         </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {phases.map((p, i) => (
             <div
               key={p.q}
-              className="rounded-2xl p-6 border border-white/5 relative overflow-hidden flex flex-col gap-3"
+              className="rounded-2xl p-6 border border-white/5 relative overflow-hidden flex flex-col gap-3 transition-transform hover:-translate-y-1 hover:shadow-xl"
               style={{ background: "var(--gradient-card)" }}
             >
               <div className="text-6xl font-black opacity-10 absolute -top-2 -right-2">
